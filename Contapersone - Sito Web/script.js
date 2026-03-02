@@ -7,7 +7,8 @@ function Home() {
     e(
       "header",
       null,
-      e("h1", null, "Contapersone")
+      e("h1", null, "Contapersone"),
+      e("h2", {id: "stt"}, "siete sotto sorveglianza!")
     )
   );
 }
@@ -19,3 +20,5 @@ function App() {
 // Render
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(e(App));
+
+
