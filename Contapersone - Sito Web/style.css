@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 body {
@@ -44,3 +45,8 @@ header h1 {
   font-size: 3rem;
   color: #1e88c9;
 }
+
+header h2 {
+  color: rgb(0, 55, 107);
+}
+
