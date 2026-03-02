@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Fiera</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <span class="top-bar">
+        <p id="spantitolo">Contapersone</p>
+    </span>
+
+    <div id="root"></div>
+
+    <!-- React -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+    <!-- App -->
+    <script src="script.js"></script>
+</body>
+</html>
