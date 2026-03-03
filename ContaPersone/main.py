@@ -1,6 +1,9 @@
 import cv2
 import logging
 import sys
+import requests
+import time
+
 from pathlib import Path
 
 from cod.detector import PersonDetector
@@ -27,6 +30,19 @@ def check_model_exists(model_path: str) -> bool:
     """Verifica se il modello esiste"""
     return Path(model_path).exists()
 
+def invia_dati(stats):
+    url = "https://tuosito.it/api.php"
+    
+    try:
+        requests.post(url, data={
+            "entrate": stats["entrate"],
+            "uscite": stats["uscite"],
+            "presenti": stats["presenti"],
+            "key": "CHIAVE_SEGRETA"
+        }, timeout=2)
+        
+    except Exception as e:
+        logger.warning(f"Errore invio dati: {e}")
 
 def main():
     """Funzione principale dell'applicazione"""
@@ -55,7 +71,8 @@ def main():
         
         logger.info("Avvio elaborazione video... (Premi ESC per uscire)")
         numero_fotogrammi = 0
-        
+
+        ultimo_invio = time.time()
         # Loop principale
         while True:
             lettura_riuscita, fotogramma = cattura_video.read()
@@ -69,7 +86,11 @@ def main():
             rilevamenti = detector.detect(fotogramma, confidenza_min=DETECTION_CONFIDENCE)
             oggetti_tracciati = tracker.update(rilevamenti)
             counter.update(oggetti_tracciati)
-            
+            # Invio dati ogni 5 secondi
+            if time.time() - ultimo_invio > 5:
+                statistiche = counter.get_stats()
+                invia_dati(statistiche)
+                ultimo_invio = time.time()
             # Disegna risultati
             counter.draw(fotogramma)
             detector.draw_detections(fotogramma, oggetti_tracciati)
