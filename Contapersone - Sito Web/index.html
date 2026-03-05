@@ -1,25 +1,193 @@
 <!DOCTYPE html>
-<html lang="it">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Contapersone</title>
-  <link rel="stylesheet" href="style.css">
+    <title>Dashboard Fiera</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Container per i 4 counter */
+        .counter-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            max-width: 1000px;
+        }
+
+        /* Singolo counter */
+        .counter-item {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            min-width: 200px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .counter-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Etichetta del counter */
+        .counter-label {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Valore del counter */
+        .counter-value {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #667eea;
+            line-height: 1;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .counter-container {
+                gap: 15px;
+            }
+            
+            .counter-item {
+                min-width: calc(50% - 10px);
+                padding: 20px;
+            }
+            
+            .counter-value {
+                font-size: 2.5rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .counter-item {
+                min-width: 100%;
+            }
+
+            .counter-value {
+                font-size: 2rem;
+            }
+        }
+
+        .status {
+            color: white;
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .status.connected {
+            color: #4ade80;
+        }
+
+        .status.disconnected {
+            color: #f87171;
+        }
+    </style>
 </head>
 <body>
+    <div class="main-container">
+        <div class="header">
+            <h1>📊 Contapersone Fiera</h1>
+        </div>
 
-  <!-- Barra superiore -->
-  <span class="top-bar">
-    <button a="index.html">Home</button>
-    <button a="pagdue.html">2</button>
-  </span>
+        <div class="counter-container">
+            <!-- Counter Persone presenti -->
+            <div class="counter-item">
+                <div class="counter-label">👥 Presenti</div>
+                <div class="counter-value" id="presenti">0</div>
+            </div>
+            
+            <!-- Counter Entrate -->
+            <div class="counter-item">
+                <div class="counter-label">🟢 Entrate</div>
+                <div class="counter-value" id="entrate">0</div>
+            </div>
+            
+            <!-- Counter Uscite -->
+            <div class="counter-item">
+                <div class="counter-label">🔴 Uscite</div>
+                <div class="counter-value" id="uscite">0</div>
+            </div>
 
-  <div id="root"></div>
+            <!-- Counter Persona totali -->
+            <div class="counter-item">
+                <div class="counter-label">📈 Totali</div>
+                <div class="counter-value" id="totali">0</div>
+            </div>
+        </div>
 
-  <!-- React -->
-  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <div class="status" id="status">
+            ⏳ Connessione in corso...
+        </div>
+    </div>
 
-  <!-- App -->
-  <script src="script.js"></script>
+    <script>
+        let lastData = {};
+
+        function fetchData() {
+            fetch('api.php')
+                .then(res => res.json())
+                .then(data => {
+                    // Aggiorna solo se i dati cambiano
+                    if (JSON.stringify(data) !== JSON.stringify(lastData)) {
+                        lastData = data;
+                        document.getElementById('presenti').innerText = data.presenti || 0;
+                        document.getElementById('entrate').innerText = data.entrate || 0;
+                        document.getElementById('uscite').innerText = data.uscite || 0;
+                        document.getElementById('totali').innerText = (data.entrate || 0);
+                        document.getElementById('status').innerText = '✅ Connesso';
+                        document.getElementById('status').className = 'status connected';
+                    }
+                })
+                .catch(err => {
+                    console.error('Errore:', err);
+                    document.getElementById('status').innerText = '❌ Errore connessione';
+                    document.getElementById('status').className = 'status disconnected';
+                });
+        }
+
+        // Prima chiamata immediatamente
+        fetchData();
+        
+        // Aggiorna ogni 1 secondo
+        setInterval(fetchData, 1000);
+    </script>
 </body>
 </html>
