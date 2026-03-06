@@ -1,97 +1,224 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Dashboard Fiera</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #e1f0fa;  /* Azzurro chiaro uniforme */
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
+        }
+
+        /* Barra superiore blu scuro */
+        .top-bar {
+            width: 100%;
+            height: 60px;
+            background-color: #003153;  /* Blu scuro intenso */
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            box-shadow: 0 2px 10px rgba(0, 49, 83, 0.3);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .top-bar .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Compensazione per la barra fissa */
+        .main-container {
+            margin-top: 60px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            width: 100%;
         }
 
+        /* Header principale */
         .header {
+            background: white;
+            padding: 2.5rem 3rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0, 49, 83, 0.15);
             text-align: center;
-            color: white;
-            margin-bottom: 40px;
+            max-width: 1000px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            margin-bottom: 20px;
         }
 
         .header h1 {
             font-size: 3rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            color: #003153;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 49, 83, 0.1);
         }
 
         /* Container per i 4 counter */
         .counter-container {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
+            margin: 20px 0;
             flex-wrap: wrap;
             max-width: 1000px;
+            width: 100%;
         }
 
-        /* Singolo counter */
+        /* Singolo counter - stile unificato con colori diversi */
         .counter-item {
-            background: white;
-            padding: 30px 40px;
-            border-radius: 15px;
-            min-width: 200px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 25px 20px;
+            border-radius: 20px;
+            min-width: 180px;
             text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex: 1;
         }
 
         .counter-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 30px rgba(0, 49, 83, 0.15);
+        }
+
+        /* Colori diversi per ogni counter */
+        .counter-item:nth-child(1) {
+            background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 100%);
+            border-bottom: 4px solid #1976D2;
+        }
+        .counter-item:nth-child(1) .counter-value {
+            color: #1976D2;
+        }
+
+        .counter-item:nth-child(2) {
+            background: linear-gradient(135deg, #ffffff 0%, #e8f5e9 100%);
+            border-bottom: 4px solid #2E7D32;
+        }
+        .counter-item:nth-child(2) .counter-value {
+            color: #2E7D32;
+        }
+
+        .counter-item:nth-child(3) {
+            background: linear-gradient(135deg, #ffffff 0%, #ffebee 100%);
+            border-bottom: 4px solid #C62828;
+        }
+        .counter-item:nth-child(3) .counter-value {
+            color: #C62828;
+        }
+
+        .counter-item:nth-child(4) {
+            background: linear-gradient(135deg, #ffffff 0%, #f3e5f5 100%);
+            border-bottom: 4px solid #6A1B9A;
+        }
+        .counter-item:nth-child(4) .counter-value {
+            color: #6A1B9A;
         }
 
         /* Etichetta del counter */
         .counter-label {
             font-size: 1rem;
-            color: #666;
-            margin-bottom: 15px;
+            color: #2c3e50;
+            margin-bottom: 12px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
+            opacity: 0.8;
         }
 
         /* Valore del counter */
         .counter-value {
-            font-size: 3.5rem;
-            font-weight: bold;
-            color: #667eea;
-            line-height: 1;
-            font-family: 'Arial', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            transition: color 0.3s ease;
         }
+
+        /* Status indicator */
+        .status {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 49, 83, 0.1);
+            display: inline-block;
+        }
+
+        .status.connected {
+            color: #2E7D32;
+            background: linear-gradient(135deg, #ffffff 0%, #e8f5e9 100%);
+            border-left: 4px solid #2E7D32;
+        }
+
+        .status.disconnected {
+            color: #C62828;
+            background: linear-gradient(135deg, #ffffff 0%, #ffebee 100%);
+            border-left: 4px solid #C62828;
+        }
+
+        /* Animazioni */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header, .counter-item, .status {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .counter-item:nth-child(1) { animation-delay: 0.2s; }
+        .counter-item:nth-child(2) { animation-delay: 0.3s; }
+        .counter-item:nth-child(3) { animation-delay: 0.4s; }
+        .counter-item:nth-child(4) { animation-delay: 0.5s; }
+        .status { animation-delay: 0.6s; }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .counter-container {
-                gap: 15px;
-            }
-            
-            .counter-item {
-                min-width: calc(50% - 10px);
-                padding: 20px;
-            }
-            
-            .counter-value {
-                font-size: 2.5rem;
+            .header {
+                padding: 1.5rem;
             }
 
             .header h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
+            }
+
+            .counter-item {
+                min-width: calc(50% - 25px);
+                padding: 20px 15px;
+            }
+
+            .counter-value {
+                font-size: 2.5rem;
             }
         }
 
@@ -99,32 +226,18 @@
             .counter-item {
                 min-width: 100%;
             }
-
-            .counter-value {
-                font-size: 2rem;
-            }
-        }
-
-        .status {
-            color: white;
-            margin-top: 30px;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        .status.connected {
-            color: #4ade80;
-        }
-
-        .status.disconnected {
-            color: #f87171;
         }
     </style>
 </head>
 <body>
+    <!-- Barra superiore blu scuro -->
+    <div class="top-bar">
+        <span class="logo">Contapersone</span>
+    </div>
+
     <div class="main-container">
         <div class="header">
-            <h1>📊 Contapersone Fiera</h1>
+            <h1>📊 Contapersone</h1>
         </div>
 
         <div class="counter-container">
@@ -171,7 +284,7 @@
                         document.getElementById('presenti').innerText = data.presenti || 0;
                         document.getElementById('entrate').innerText = data.entrate || 0;
                         document.getElementById('uscite').innerText = data.uscite || 0;
-                        document.getElementById('totali').innerText = (data.entrate || 0);
+                        document.getElementById('totali').innerText = (data.entrate || 0) + (data.uscite || 0);
                         document.getElementById('status').innerText = '✅ Connesso';
                         document.getElementById('status').className = 'status connected';
                     }
