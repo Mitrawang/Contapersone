@@ -95,6 +95,9 @@ class PeopleCounter:
             else:
                 current_state = "on_line"
 
+            print("prev: " + prev_state)
+            print("curr: " + current_state)
+
             # Conta solo se non siamo in cooldown e lo stato è passato da above->below o below->above
             if cooldown <= 0:
                 if prev_state == "above" and current_state == "below":
